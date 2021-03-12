@@ -1,0 +1,226 @@
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="qoc_sales_order_delivery_schedule.qweb">
+      <field name="name">Sales Order Delivery Schedule qweb</field>
+      <field name="model">sale.order</field>
+      <field name="arch" type="xml">
+        <qweb>
+          <!-- <script src="../js/delivery_qweb.js"/> -->
+          <script>
+            function toggle_dropdown(el){
+                    var target = el.parentElement.parentElement.nextElementSibling;
+                    var t2 = target.nextElementSibling;
+                    if (target.style.display == ''){
+                      target.style.display = 'none';
+                      el.className = 'fa fa-caret-right dropdown-content';
+                    }
+                    else{
+                      target.style.display = '';
+                      el.className = 'fa fa-caret-down dropdown-content';
+                    }
+                    if ($(t2).hasClass("dropdown-content") &amp;&amp; !$(t2).hasClass("no-hide")){
+                      if (t2.style.display == ''){
+                        t2.style.display = 'none';
+                      }
+                      else{
+                        t2.style.display = '';
+                      }
+                    }
+                  }
+                  function get_data(el,path){
+                    id = el.getAttribute("model_id");
+                    next_box = String(next_box_id(el));
+                    current_box = get_box_id(el);
+                  
+                    $.ajax({
+                        url: "/qoc_sales_order_delivery_schedule/qoc_sales_order_delivery_schedule/"+path+"/"+String(id),
+                        success: function( result ) {
+                          id1 = parseInt(current_box) + 1;
+                          id2 = id1 + 1;
+                          if (next_box % 2 == 1 &amp;&amp; $('#box_'+id1).length == 0){
+                            // Create new row
+                            $("#page_container").append('<div class="row justify-content-around mb-4"><div class="col"><div class="ds_card" id="box_'+id1+'"><span>Content</span></div></div><div class="col"><div class="ds_card" id="box_'+id2+'"><span>Content</span></div></div></div>');
+                          }
+                          $("#box_" + next_box).html(result);
+                          $("#box_" + next_box).find(".dropdown-content:not(.no-hide)").hide();
+                        }
+                      });
+                    select(el,current_box);
+                  }
+                  function select(el, box){
+                    $("#box_"+String(box)).find(".selected").removeClass("selected");
+                    el.classList.add("selected");
+                  }
+                  function get_box_id(el){
+                    return $(el).closest(".ds_card").attr('id').substring(4);
+                  }
+                  function next_box_id(el){
+                    return eval($(el).closest(".ds_card").attr('id').substring(4)+" + 1");
+                  }
+          </script>
+          <style>
+                  .ds_card{
+                    border: 2px solid #ced4da;
+                    min-width: 170px;
+                    background-color: #ffffff;
+                    margin: 4px;
+                    padding: 4px;
+                    overflow: auto;/* Scroll Bars for long table data */
+                    max-height: 300px;
+                }
+                  .selected{
+                    background-color: powderblue !important;
+                  }
+                  .selected:hover{
+                    background-color: lightblue !important;
+                  }
+                </style>
+          <div class="container" id="page_container">
+            <div class="row justify-content-around mb-4">
+              <!-- Box 1 -->
+              <div class="col">
+                <div class="o_list_view ds_card" id="box_1">
+                  <div class="table-responsive">
+                    <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped" style="table-layout: fixed;">
+                      <thead>
+                        <tr>
+                          <th class="o_column_sortable">
+                            <strong>Name</strong>
+                            <!-- <span class="o_resize" /> -->
+                          </th>
+                          <th class="o_column_sortable">
+                            <strong>Customer</strong>
+                            <!-- <span class="o_resize" /> -->
+                          </th>
+                          <th class="o_column_sortable">
+                            <strong>Delivery Date</strong>
+                            <!-- <span class="o_resize" /> -->
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <t t-set="count_loaded" t-value="0" />
+                        <t t-foreach="records" t-as="record">
+                          <!-- Record is a Sales Order -->
+                          <tr t-if="count_loaded &lt; 80 and record.state == 'sale'">
+                            <t t-set="count_loaded" t-value="count_loaded + 1" />
+                            <td>
+                              <span class="fa fa-caret-right" onclick="toggle_dropdown(this)" style="padding-left: 2px; padding-right: 5px;" />
+                              <span>
+                                <a t-attf-href="#id={{record.id}}&amp;model=sale.order" target="_blank">
+                                  <t t-esc="record.name" />
+                                </a>
+                              </span>
+                            </td>
+                            <td>
+                              <t t-esc="record.partner_id.name" />
+                            </td>
+                            <td>
+                              <t t-if="record.commitment_date">
+                                <t t-esc="record.commitment_date.strftime('%m/%d/%Y') if record.commitment_date else ''" />
+                              </t>
+                              <t t-else="">
+                                <t t-esc="record._compute_expected_date() or record.expected_date.strftime('%m/%d/%Y') if record.expected_date else ''" />
+                              </t>
+                            </td>
+                            <!-- Products -->
+                            <tr class="dropdown-content">
+                              <td colspan="3" style="padding-left: 10px;">
+                                <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped" style="table-layout: fixed;">
+                                  <thead>
+                                    <tr>
+                                      <th>Product</th>
+                                      <th>Qty</th>
+                                      <th>On Hand</th>
+                                      <th>Reserved</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <t t-foreach="record.order_line" t-as="so_line">
+                                      <t t-if="so_line.product_id.type != 'service'">
+                                        <tr onclick="get_data(this,'mo_data')" t-attf-model_id="{{so_line.id}}">
+                                          <td>
+                                            <span>
+                                              <a t-attf-href="#id={{so_line.product_id.id}}&amp;model=product.product" target="_blank">
+                                                <t t-if="so_line.product_id.default_code">
+                                                  [
+                                                  <t t-esc="so_line.product_id.default_code" />
+                                                  ]&#160;
+                                                </t>
+                                                <t t-esc="so_line.name" />
+                                              </a>
+                                            </span>
+                                          </td>
+                                          <td>
+                                            <t t-esc="so_line.product_uom_qty" />
+                                          </td>
+                                          <td>
+                                            <t t-esc="so_line.product_id._compute_quantities() or so_line.product_id.qty_available" />
+                                          </td>
+                                          <td>
+                                            <t t-set="reserved" t-value="0" />
+                                            <t t-foreach="so_line.get_delivery_records()" t-as="deliveries">
+                                              <t t-foreach="deliveries.move_ids_without_package" t-as="delivery">
+                                                <t t-if="delivery.product_id == so_line.product_id">
+                                                  <t t-if="delivery.state == 'assigned'">
+                                                    <t t-set="res" t-value="delivery._compute_forecast_information() or delivery.forecast_availability" />
+                                                    <t t-set="reserved" t-value="reserved + res" />
+                                                    <div t-field="delivery.forecast_availability" t-options='{"widget": "forecast_widget"}'/>
+                                                  <!--  -->
+                                                  </t>
+                                                </t>
+                                              </t>
+                                            </t>
+                                            <t t-esc="reserved" />
+                                          </td>
+                                        </tr>
+                                      </t>
+                                    </t>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+
+                          </tr>
+                        </t>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- End Column -->
+              </div>
+              <!-- Box 2 -->
+              <div class="col">
+                <div class="ds_card" id="box_2">
+                  <span>Content</span>
+                </div>
+              </div>
+              <!-- End Row -->
+            </div>
+            <!-- <div class="row justify-content-around mb-4">
+                    <!- Box 3 ->
+                    <div class="col">
+                      <div class="ds_card" id="box_3">
+                        <span>Content</span>
+                      </div>
+                    </div>
+                    <!- Box 4 ->
+                    <div class="col">
+                      <div class="ds_card" id="box_4">
+                        <span>Content</span>
+                      </div>
+                    </div>
+                  </div> -->
+            <!-- End container -->
+          </div>
+
+          <!-- Collapse all dropdowns -->
+          <script>
+                  // class target is .dropdown-content
+                  $(".dropdown-content").hide();
+                </script>
+        </qweb>
+      </field>
+    </record>
+  </data>
+</odoo>

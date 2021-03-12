@@ -1,0 +1,79 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <!-- <record model="ir.ui.view" id="qoc_sales_order_delivery_schedule.list">
+      <field name="name">Sales Order Delivery Schedule list</field>
+      <field name="model">sale.order.line</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="id" />
+          <field name="name" />
+          <!- <groupby name="partner_id">
+            <field name="name"/>
+              <button type="edit" name="edit" string="Edit"/>
+              <button type="object" name="my_method" string="Button1"
+                attrs="{'invisible': [('name', '=', 'Georges')]}"/>
+          </groupby> ->
+        </tree>
+      </field>
+    </record> -->
+
+
+    <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="qoc_sales_order_delivery_schedule.action_window">
+      <field name="name">Sales Order Delivery Schedule</field>
+      <field name="res_model">sale.order</field>
+      <field name="view_mode">qweb</field>
+    </record>
+
+
+    <!-- <record model="ir.ui.view" id="hello_world_view_1">
+        <field name="model">res.partner</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <delivery_schedule>
+            </delivery_schedule>
+        </field>
+    </record>
+
+     <menuitem id="main_hello_world_menu" name="Hello World App"/> -->
+
+    <!-- server action to the one above -->
+
+    <!-- <record model="ir.actions.server" id="qoc_sales_order_delivery_schedule.action_server">
+      <field name="name">qoc_sales_order_delivery_schedule server</field>
+      <field name="model_id" ref="model_qoc_sales_order_delivery_schedule"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record> -->
+
+
+    <!-- Top menu item -->
+
+    <menuitem name="Shop Flow" 
+    id="qoc_sales_order_delivery_schedule.menu_root" 
+    action="qoc_sales_order_delivery_schedule.action_window" 
+    web_icon="qoc_sales_order_delivery_schedule,static/description/icon.png"/>
+
+    <!-- menu categories -->
+    <!--
+    <menuitem name="Menu 1" id="qoc_sales_order_delivery_schedule.menu_1" parent="qoc_sales_order_delivery_schedule.menu_root"/>
+    <menuitem name="Menu 2" id="qoc_sales_order_delivery_schedule.menu_2" parent="qoc_sales_order_delivery_schedule.menu_root"/>
+-->
+    <!-- actions -->
+    <!--
+    <menuitem name="List" id="qoc_sales_order_delivery_schedule.menu_1_list" parent="qoc_sales_order_delivery_schedule.menu_1"
+              action="qoc_sales_order_delivery_schedule.action_window"/>
+    <menuitem name="Server to list" id="qoc_sales_order_delivery_schedule" parent="qoc_sales_order_delivery_schedule.menu_2"
+              action="qoc_sales_order_delivery_schedule.action_server"/>
+-->
+  </data>
+</odoo>

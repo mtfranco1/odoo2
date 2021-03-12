@@ -1,0 +1,189 @@
+<odoo>
+  <data>
+
+    <template id="listing">
+      <ul>
+        <li t-foreach="objects" t-as="object">
+          <a t-attf-href="#{ root }/objects/#{ object.id }" target="_blank">
+            <t t-esc="object.display_name" />
+          </a>
+        </li>
+      </ul>
+    </template>
+    <template id="object">
+      <h1>
+        <t t-esc="object.display_name" />
+      </h1>
+      <dl>
+        <t t-foreach="object._fields" t-as="field">
+          <dt>
+            <t t-esc="field" />
+          </dt>
+          <dd>
+            <t t-esc="object[field]" />
+          </dd>
+        </t>
+      </dl>
+    </template>
+
+    <template id="component_lines">
+      <tr t-attf-class="dropdown-content{{' no-hide' if should_hide else ''}}">
+        <td colspan="3" style="padding-left: 10px;">
+          <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped" style="table-layout: fixed;">
+            <thead>
+              <tr>
+                <th>Component Name</th>
+                <th>Quantity to Consume</th>
+                <th>Reserved</th>
+              </tr>
+            </thead>
+            <tbody>
+              <t t-foreach="components" t-as="component">
+                <tr onclick="get_data(this,'mo_data_product')" t-attf-model_id="{{component.product_id.id}}">
+                  <td>
+                    <a t-attf-href="#id={{component.product_id.id}}&amp;model=product.product" target="_blank">
+                      <t t-if="component.product_id.default_code">
+                        [
+                        <t t-esc="component.product_id.default_code" />
+                        ]&#160;
+                      </t>
+                      <t t-esc="component.product_id.name" />
+                    </a>
+                  </td>
+                  <td>
+                    <span t-field="component.should_consume_qty" />
+                    /
+                    <t t-esc="component.product_uom_qty" />
+                  </td>
+                  <td>
+                    <t t-set="reserved" t-value="0" />
+                    <t t-foreach="mo_line.move_raw_ids" t-as="delivery">
+                      <t t-if="delivery.product_id == component.product_id">
+                        <t t-if="delivery.state == 'assigned'">
+                          <t t-set="res" t-value="delivery._compute_forecast_information() or delivery.forecast_availability" />
+                          <t t-set="reserved" t-value="reserved + res" />
+                          <!-- <div t-field="delivery.forecast_availability" t-widget="forecast_widget"/> -->
+                        </t>
+                      </t>
+                    </t>
+                    <t t-esc="reserved" />
+                  </td>
+                </tr>
+              </t>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </template>
+
+    <template id="wo_lines">
+      <tr class="dropdown-content">
+        <td colspan="3" style="padding-left: 10px;">
+          <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped" style="table-layout: fixed;">
+            <thead>
+              <tr>
+                <!-- <th>Component</th>
+                <th>Quantity to Consume</th> -->
+                <th>Operation</th>
+                <th>Start Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <t t-foreach="workorders" t-as="workorder">
+                <t t-set="components" t-value="workorder.get_consumed_components()" />
+                <tr>
+                  <td>
+                    <t t-if="len(components) > 0">
+                      <span class="fa fa-caret-down" onclick="toggle_dropdown(this)" style="padding-left: 2px; padding-right: 5px;" />
+                    </t>
+                    <a t-attf-href="#id={{workorder.id}}&amp;model=mrp.workorder" target="_blank">
+                      <t t-esc="workorder.name" />
+                    </a>
+                  </td>
+                  <td>
+                    <t t-esc="workorder.date_planned_start.strftime('%m/%d/%Y') if workorder.date_planned_start else ''" />
+                  </td>
+                  <td>
+                    <!-- <t t-esc="workorder.state" /> -->
+                    <!-- <div t-field="workorder.state" t-options='{"widget": "selection_badge"}'/> -->
+                    <div t-field="workorder.state" />
+                  </td>
+                </tr>
+                <t t-if="len(components) > 0">
+                  <t t-call="qoc_sales_order_delivery_schedule.component_lines">
+                    <t t-set="should_hide" t-value="True"></t>
+                  </t>
+                </t>
+              </t>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </template>
+
+    <template id="mo_lines">
+      <t t-if="len(objects) > 0">
+        <div class="o_list_view">
+          <div class="table-responsive">
+            <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped" style="table-layout: fixed;">
+              <thead>
+                <tr>
+                  <th>Order Name</th>
+                  <!-- <th>Part #</th> -->
+                  <th>Qty</th>
+                  <th>Scheduled Date</th>
+                  <!-- <th>Deadline</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <t t-foreach="objects" t-as="mo_line">
+                  <!-- <t t-set="components" t-value="mo_line.move_raw_ids" /> -->
+                  <t t-set="workorders" t-value="mo_line.workorder_ids" />
+                  <tr>
+                    <td>
+                      <t t-if="len(workorders) > 0">
+                        <span class="fa fa-caret-right" onclick="toggle_dropdown(this)" style="padding-left: 2px; padding-right: 5px;" />
+                      </t>
+                      <span>
+                        <a t-attf-href="#id={{mo_line.id}}&amp;model=mrp.production" target="_blank">
+                          <t t-esc="mo_line.name" />
+                        </a>
+                      </span>
+                    </td>
+                    <!-- <td>
+                      <t t-esc="mo_line.product_id.default_code" />
+                    </td> -->
+                    <td>
+                      <t t-esc="mo_line.product_qty" />
+                    </td>
+                    <td>
+                      <t t-esc="mo_line.date_planned_start.strftime('%m/%d/%Y') if mo_line.date_planned_start else ''" />
+                    </td>
+                    <!-- <td>
+                      <t t-esc="mo_line.date_deadline.strftime('%m/%d/%Y') if mo_line.date_deadline else ''" />
+                    </td> -->
+                  </tr>
+                  <t t-set="extra_products" t-value="mo_line.get_product_lines()"/>
+                  <t t-if="len(extra_products) > 0">
+                    <t t-call="qoc_sales_order_delivery_schedule.component_lines">
+                      <t t-set="components" t-value="extra_products"></t>
+                      <t t-set="should_hide" t-value="False"></t>
+                    </t>
+                  </t>
+                  <t t-if="len(workorders) > 0">
+                    <t t-call="qoc_sales_order_delivery_schedule.wo_lines"></t>
+                  </t>
+                </t>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </t>
+      <t t-else="">
+        <h3>No current manufacturing orders were found for this product.</h3>
+      </t>
+    </template>
+
+  </data>
+</odoo>
