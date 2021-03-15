@@ -19,7 +19,7 @@ class ShopFlow(models.Model):
 
     @api.model
     def get_all_sale_orders(self):
-        return self.env['sale.order'].search([])
+        return self.env['sale.order'].search([],order="commitment_date desc")
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
