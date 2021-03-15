@@ -39,7 +39,7 @@
                           id2 = id1 + 1;
                           if (next_box % 2 == 1 &amp;&amp; $('#box_'+id1).length == 0){
                             // Create new row
-                            $("#page_container").append('<div class="row justify-content-around mb-4"><div class="col"><div class="ds_card" id="box_'+id1+'"><span>Content</span></div></div><div class="col"><div class="ds_card" id="box_'+id2+'"><span>Content</span></div></div></div>');
+                            $("#page_container").append('<div class="row justify-content-around mb-4"><div class="col"><div class="ds_card" id="box_'+id1+'"><span></span></div></div><div class="col"><div class="ds_card" id="box_'+id2+'"><span></span></div></div></div>');
                           }
                           $("#box_" + next_box).html(result);
                           $("#box_" + next_box).find(".dropdown-content:not(.no-hide)").hide();
@@ -202,7 +202,7 @@
               <!-- Box 2 -->
               <div class="col">
                 <div class="ds_card" id="box_2">
-                  <span>Content</span>
+                  <span></span>
                 </div>
               </div>
               <!-- End Row -->
