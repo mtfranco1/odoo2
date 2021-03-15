@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_shop_flow_shop_flow,shop_flow.shop_flow,model_shop_flow_shop_flow,group_shop_flow_user,1,1,1,1
