@@ -1,11 +1,11 @@
 <odoo>
   <data>
-    <record model="ir.ui.view" id="qoc_sales_order_delivery_schedule.qweb">
-      <field name="name">Sales Order Delivery Schedule qweb</field>
-      <field name="model">sale.order</field>
+    <record model="ir.ui.view" id="shop_flow.qweb">
+      <field name="name">Shop Flow qweb</field>
+      <field name="model">shop_flow.shop_flow</field>
       <field name="arch" type="xml">
         <qweb>
-          <!-- <script src="../js/delivery_qweb.js"/> -->
+          <!-- <script src="../js/delivery_qweb.js"/>  -->
           <script>
             function toggle_dropdown(el){
                     var target = el.parentElement.parentElement.nextElementSibling;
@@ -33,7 +33,7 @@
                     current_box = get_box_id(el);
                   
                     $.ajax({
-                        url: "/qoc_sales_order_delivery_schedule/qoc_sales_order_delivery_schedule/"+path+"/"+String(id),
+                        url: "/shop_flow/"+path+"/"+String(id),
                         success: function( result ) {
                           id1 = parseInt(current_box) + 1;
                           id2 = id1 + 1;
@@ -100,9 +100,11 @@
                       </thead>
                       <tbody>
                         <t t-set="count_loaded" t-value="0" />
-                        <t t-foreach="records" t-as="record">
+                        <t t-set="orders" t-value="records.get_all_sale_orders()"/>
+                        <t t-foreach="orders" t-as="record">
                           <!-- Record is a Sales Order -->
-                          <tr t-if="count_loaded &lt; 80 and record.state == 'sale'">
+                          <t t-set="is_delivered" t-value="record._compute_delivered() or record.is_delivered"/>
+                          <tr t-if="count_loaded &lt; 80 and record.state == 'sale' and not is_delivered">
                             <t t-set="count_loaded" t-value="count_loaded + 1" />
                             <td>
                               <span class="fa fa-caret-right" onclick="toggle_dropdown(this)" style="padding-left: 2px; padding-right: 5px;" />
@@ -113,7 +115,12 @@
                               </span>
                             </td>
                             <td>
-                              <t t-esc="record.partner_id.name" />
+                              <t t-if="record.partner_id.parent_id">
+                                <t t-esc="record.partner_id.parent_id.name"></t>
+                              </t>
+                              <t t-else="">
+                                <t t-esc="record.partner_id.name" />
+                              </t>
                             </td>
                             <td>
                               <t t-if="record.commitment_date">
@@ -132,12 +139,13 @@
                                       <th>Product</th>
                                       <th>Qty</th>
                                       <th>On Hand</th>
+                                      <th>Delivered</th>
                                       <th>Reserved</th>
                                     </tr>
                                   </thead>
                                   <tbody>
                                     <t t-foreach="record.order_line" t-as="so_line">
-                                      <t t-if="so_line.product_id.type != 'service'">
+                                      <t t-if="so_line.product_id.type != 'service' and so_line.display_type is False">
                                         <tr onclick="get_data(this,'mo_data')" t-attf-model_id="{{so_line.id}}">
                                           <td>
                                             <span>
@@ -158,19 +166,21 @@
                                             <t t-esc="so_line.product_id._compute_quantities() or so_line.product_id.qty_available" />
                                           </td>
                                           <td>
-                                            <t t-set="reserved" t-value="0" />
-                                            <t t-foreach="so_line.get_delivery_records()" t-as="deliveries">
+                                            <t t-esc="so_line._compute_qty_delivered() or so_line.qty_delivered"/>
+                                          </td>
+                                          <td>
+                                            <t t-set="reserved" t-value="so_line.get_reserved()" />
+                                            <!-- <t t-foreach="so_line.get_delivery_records()" t-as="deliveries">
                                               <t t-foreach="deliveries.move_ids_without_package" t-as="delivery">
                                                 <t t-if="delivery.product_id == so_line.product_id">
                                                   <t t-if="delivery.state == 'assigned'">
                                                     <t t-set="res" t-value="delivery._compute_forecast_information() or delivery.forecast_availability" />
                                                     <t t-set="reserved" t-value="reserved + res" />
-                                                    <div t-field="delivery.forecast_availability" t-options='{"widget": "forecast_widget"}'/>
-                                                  <!--  -->
+                                                    <!- <div t-field="delivery.forecast_availability" t-options='{"widget": "forecast_widget"}'/> ->
                                                   </t>
                                                 </t>
                                               </t>
-                                            </t>
+                                            </t> -->
                                             <t t-esc="reserved" />
                                           </td>
                                         </tr>

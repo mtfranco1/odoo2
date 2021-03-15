@@ -2,7 +2,7 @@
   <data>
     <!-- explicit list view definition -->
 
-    <!-- <record model="ir.ui.view" id="qoc_sales_order_delivery_schedule.list">
+    <!-- <record model="ir.ui.view" id="shop_flow.list">
       <field name="name">Sales Order Delivery Schedule list</field>
       <field name="model">sale.order.line</field>
       <field name="arch" type="xml">
@@ -22,12 +22,11 @@
 
     <!-- actions opening views on models -->
 
-    <record model="ir.actions.act_window" id="qoc_sales_order_delivery_schedule.action_window">
-      <field name="name">Sales Order Delivery Schedule</field>
-      <field name="res_model">sale.order</field>
+    <record model="ir.actions.act_window" id="shop_flow.action_window">
+      <field name="name">Shop Flow</field>
+      <field name="res_model">shop_flow.shop_flow</field>
       <field name="view_mode">qweb</field>
     </record>
-
 
     <!-- <record model="ir.ui.view" id="hello_world_view_1">
         <field name="model">res.partner</field>
@@ -42,9 +41,9 @@
 
     <!-- server action to the one above -->
 
-    <!-- <record model="ir.actions.server" id="qoc_sales_order_delivery_schedule.action_server">
-      <field name="name">qoc_sales_order_delivery_schedule server</field>
-      <field name="model_id" ref="model_qoc_sales_order_delivery_schedule"/>
+    <!-- <record model="ir.actions.server" id="shop_flow.action_server">
+      <field name="name">shop_flow server</field>
+      <field name="model_id" ref="model_shop_flow"/>
       <field name="state">code</field>
       <field name="code">
         action = {
@@ -59,21 +58,21 @@
     <!-- Top menu item -->
 
     <menuitem name="Shop Flow" 
-    id="qoc_sales_order_delivery_schedule.menu_root" 
-    action="qoc_sales_order_delivery_schedule.action_window" 
-    web_icon="qoc_sales_order_delivery_schedule,static/description/icon.png"/>
+    id="shop_flow.menu_root" 
+    action="shop_flow.action_window" 
+    web_icon="shop_flow,static/description/icon.png"/>
 
     <!-- menu categories -->
     <!--
-    <menuitem name="Menu 1" id="qoc_sales_order_delivery_schedule.menu_1" parent="qoc_sales_order_delivery_schedule.menu_root"/>
-    <menuitem name="Menu 2" id="qoc_sales_order_delivery_schedule.menu_2" parent="qoc_sales_order_delivery_schedule.menu_root"/>
+    <menuitem name="Menu 1" id="shop_flow.menu_1" parent="shop_flow.menu_root"/>
+    <menuitem name="Menu 2" id="shop_flow.menu_2" parent="shop_flow.menu_root"/>
 -->
     <!-- actions -->
     <!--
-    <menuitem name="List" id="qoc_sales_order_delivery_schedule.menu_1_list" parent="qoc_sales_order_delivery_schedule.menu_1"
-              action="qoc_sales_order_delivery_schedule.action_window"/>
-    <menuitem name="Server to list" id="qoc_sales_order_delivery_schedule" parent="qoc_sales_order_delivery_schedule.menu_2"
-              action="qoc_sales_order_delivery_schedule.action_server"/>
+    <menuitem name="List" id="shop_flow.menu_1_list" parent="shop_flow.menu_1"
+              action="shop_flow.action_window"/>
+    <menuitem name="Server to list" id="shop_flow" parent="shop_flow.menu_2"
+              action="shop_flow.action_server"/>
 -->
   </data>
 </odoo>

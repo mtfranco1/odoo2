@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "qoc_sales_order_delivery_schedule",
+    'name': "Shop Flow",
 
     'summary': """
         Short (1 phrase/line) summary of the module's purpose, used as
@@ -10,8 +10,8 @@
         Long description of module's purpose
     """,
 
-    'author': "My Company",
-    'website': "http://www.yourcompany.com",
+    'author': "QOC Innovations",
+    'website': "http://www.qocinnovations.com",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/14.0/odoo/addons/base/data/ir_module_category_data.xml
@@ -24,7 +24,8 @@
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/security.xml',
+        'security/ir.model.access.csv',
         'views/templates.xml',
         'views/delivery_schedule.xml',
         'views/views.xml',

@@ -1,0 +1,8 @@
+<odoo>
+    <data>
+        <!-- Permission Group for our model -->
+        <record id="group_shop_flow_user" model="res.groups">
+            <field name="name">ShopFlow / User</field>
+        </record>
+    </data>
+</odoo>
