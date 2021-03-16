@@ -19,7 +19,7 @@ class ShopFlow(models.Model):
 
     @api.model
     def get_all_sale_orders(self):
-        return self.env['sale.order'].search([], order="id desc")
+        return self.env['sale.order'].search([],order="commitment_date desc, expected_date desc,id desc")
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -35,14 +35,14 @@ class SaleOrder(models.Model):
                     res = False
         self.is_delivered = res
 
-    @api.model
-    def create(self, vals):
-        res = super(SaleOrder, self).create(vals)
-        self.env['shop_flow.shop_flow'].create({
-            'order_id': res.id
-        })
-        _logger.info("\RESVAL: " + str(res) + "\n" + str(res.id))
-        return res
+    # @api.model
+    # def create(self, vals):
+    #     res = super(SaleOrder, self).create(vals)
+    #     self.env['shop_flow.shop_flow'].create({
+    #         'order_id': res.id
+    #     })
+    #     _logger.info("\RESVAL: " + str(res) + "\n" + str(res.id))
+    #     return res
 
 class SaleLine(models.Model):
     _inherit = 'sale.order.line'

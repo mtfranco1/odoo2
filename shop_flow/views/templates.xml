@@ -30,6 +30,7 @@
       <tr t-attf-class="dropdown-content{{' no-hide' if should_hide else ''}}">
         <td colspan="3" style="padding-left: 10px;">
           <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped" style="table-layout: fixed;">
+            <caption>Components</caption>
             <thead>
               <tr>
                 <th>Component Name</th>
@@ -60,17 +61,33 @@
                     <t t-esc="component.product_id._compute_quantities() or component.product_id.qty_available" />
                   </td>
                   <td>
-                    <t t-set="reserved" t-value="0" />
+                    <!-- <div t-field="component.forecast_availability" t-options="{'widget':'forecast_widget',}"></div> -->
+                    <t t-set="availability" t-value="component._compute_forecast_information() or component.forecast_availability"/>
+                    <t t-call="shop_flow.forecast">
+                      <t t-set="state" t-value="component.state"/>
+                      <t t-set="reserved_availability_str" t-value="reserved_availability"/>
+                      <t t-set="will_be_fulfilled" t-value="round(availability) >= round(component.product_qty)"/>
+                      <t t-set="forecast_expected_date_str" t-value="component.forecast_expected_date"/>
+                      <t t-if="component.forecast_expected_date and component.date_deadline">
+                        <t t-set="forecast_is_late" t-value="component.forecast_expected_date > component.date_deadline"/>
+                      </t>
+                      <t t-else="">
+                        <t t-set="forecast_is_late" t-value="False"/>
+                      </t>
+                      <t t-set="product_type" t-value="component.product_type"/>
+                      <t t-set="id" t-value="component.product_id"/>
+                      <t t-set="action_id" t-value="component.env['ir.actions.actions'].search([('name','=','Forecasted Report'),('type','=','ir.actions.client')], limit=1)[0].id"/>
+                    </t>
+                    <!-- <t t-set="reserved" t-value="0" />
                     <t t-foreach="mo_line.move_raw_ids" t-as="delivery">
                       <t t-if="delivery.product_id == component.product_id">
                         <t t-if="delivery.state == 'assigned'">
                           <t t-set="res" t-value="delivery._compute_forecast_information() or delivery.forecast_availability" />
                           <t t-set="reserved" t-value="reserved + res" />
-                          <!-- <div t-field="delivery.forecast_availability" t-widget="forecast_widget"/> -->
                         </t>
                       </t>
                     </t>
-                    <t t-esc="reserved" />
+                    <t t-esc="reserved" /> -->
                   </td>
                 </tr>
               </t>
@@ -84,6 +101,7 @@
       <tr class="dropdown-content">
         <td colspan="3" style="padding-left: 10px;">
           <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped" style="table-layout: fixed;">
+            <caption>Work Orders</caption>
             <thead>
               <tr>
                 <!-- <th>Component</th>
@@ -131,6 +149,7 @@
         <div class="o_list_view">
           <div class="table-responsive">
             <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped" style="table-layout: fixed;">
+              <caption>Manufacturing Orders</caption>
               <thead>
                 <tr>
                   <th>Order Name</th>
@@ -191,6 +210,7 @@
         <div class="o_list_view">
           <div class="table-responsive">
             <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped" style="table-layout: fixed;">
+              <caption>Purchase Orders</caption>
               <thead>
                 <tr>
                   <th>PO Name</th>
@@ -219,6 +239,7 @@
                     <tr class="dropdown-content">
                       <td colspan="3" style="padding-left: 10px;">
                         <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped" style="table-layout: fixed;">
+                          <caption>Products</caption>
                           <thead>
                             <tr>
                               <th>Product</th>
@@ -262,6 +283,18 @@
             </div>
           </div>
         </t>
+    </template>
+
+    <template id="forecast">
+      <span t-if="state in ['draft', 'partially_available', 'assigned', 'cancel', 'done']" t-esc="reserved_availability_str"/>
+        <span t-elif="not forecast_expected_date_str and will_be_fulfilled" class="text-success">Available</span>
+        <span t-elif="forecast_expected_date_str and will_be_fulfilled" t-attf-class="{{'text-danger' if forecast_is_late else 'text-warning'}}">Exp <t t-esc="forecast_expected_date_str"/></span>
+        <span t-else="" class="text-danger">Not Available</span>
+        <a t-attf-href="#action={{action_id}}&amp;active_id={{id.id}}&amp;cids=1&amp;menu_id=&amp;active_model=product.product" target="_blank">
+          <button t-if="product_type == 'product'" t-attf="{{ {} if id else {'disabled': ''} }}" class="o_forecast_report_button btn btn-link o_icon_button ml-2" title="Forecasted Report">
+            <i t-attf-class="fa fa-fw fa-area-chart {{'text-danger' if state != 'draft' and (not will_be_fulfilled or forecast_is_late) else ''}}"/>
+          </button>
+        </a>
     </template>
 
   </data>

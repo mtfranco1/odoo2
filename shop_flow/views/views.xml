@@ -24,7 +24,7 @@
 
     <record model="ir.actions.act_window" id="shop_flow.action_window">
       <field name="name">Shop Flow</field>
-      <field name="res_model">sale.order</field>
+      <field name="res_model">shop_flow.shop_flow</field>
       <field name="view_mode">qweb</field>
     </record>
 
