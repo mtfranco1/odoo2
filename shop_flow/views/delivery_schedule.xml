@@ -2,7 +2,7 @@
   <data>
     <record model="ir.ui.view" id="shop_flow.qweb">
       <field name="name">Shop Flow qweb</field>
-      <field name="model">shop_flow.shop_flow</field>
+      <field name="model">sale.order</field>
       <field name="arch" type="xml">
         <qweb>
           <!-- <script src="../js/delivery_qweb.js"/>  -->
