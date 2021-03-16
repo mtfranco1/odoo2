@@ -36,7 +36,7 @@ class DeliveryScheduleManager(http.Controller):
         })
     @http.route('/shop_flow/mo_data_product/<model("product.product"):obj>/', auth='user')
     def mo_data_product(self, obj, **kw):
-        data = obj.get_mo_records()
+        data = obj.env['mrp.production'].search([('product_id','=',obj.id)],limit=80)
         po_data = obj.get_po_records()
         return http.request.render('shop_flow.mo_lines', {
             'objects': data,
