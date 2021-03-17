@@ -126,8 +126,8 @@
                         <!-- <t t-set="orders" t-value="records.get_all_sale_orders()"/> -->
                         <t t-foreach="records" t-as="record">
                           <!-- Record is a Sales Order -->
-                          <t t-set="is_delivered" t-value="record._compute_delivered() or record.is_delivered"/>
-                          <tr t-if="count_loaded &lt; 500 and record.state == 'sale' and not is_delivered">
+                          <!-- <t t-set="is_delivered" t-value="record._compute_delivered() or record.is_delivered"/> -->
+                          <tr t-if="count_loaded &lt; 500"> <!-- and record.state == 'sale' and not is_delivered"> -->
                             <t t-set="count_loaded" t-value="count_loaded + 1" />
                             <td>
                               <span class="fa fa-caret-right" onclick="toggle_dropdown(this)" style="padding-left: 2px; padding-right: 5px;" />

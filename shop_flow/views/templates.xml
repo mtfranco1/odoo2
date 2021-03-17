@@ -129,7 +129,7 @@
                   <td>
                     <!-- <t t-esc="workorder.state" /> -->
                     <!-- <div t-field="workorder.state" t-options='{"widget": "selection_badge"}'/> -->
-                    <div t-field="workorder.state" />
+                    <span class="badge badge-pill"><div t-field="workorder.state" /></span>
                   </td>
                 </tr>
                 <t t-if="len(components) > 0">
