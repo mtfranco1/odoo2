@@ -37,7 +37,7 @@
       <field name="arch" type="xml">
         <xpath expr="//search/filter" position="before">
           <!-- <searchpanel view_types="qweb"></searchpanel> -->
-          <filter string="Late Sales" name="late_sales" domain="[('commitment_date','&lt;',((context_today()).strftime('%Y-%m-%d')))]"/>
+          <filter string="Late Sales" name="late_sales" domain="[('id','&gt;',1200),('commitment_date','&lt;',((context_today()).strftime('%Y-%m-%d')))]"/>
         </xpath>
       </field>
     </record>
