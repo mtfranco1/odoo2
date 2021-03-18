@@ -124,7 +124,10 @@
                       <tbody>
                         <t t-set="count_loaded" t-value="0" />
                         <!-- <t t-set="orders" t-value="records.get_all_sale_orders()"/> -->
-                        <t t-foreach="records" t-as="record">
+                        <t t-set="sort_key" t-value="lambda x: 'commitment_date' if x.commitment_date else 'expected_date' if x.expected_date else 'id'"/>
+                        <t t-set="dummy" t-value="records._compute_expected_date()"/>
+                        <t t-set="orders" t-value="records.sorted(key=sort_key)"/>
+                        <t t-foreach="orders" t-as="record">
                           <!-- Record is a Sales Order -->
                           <!-- <t t-set="is_delivered" t-value="record._compute_delivered() or record.is_delivered"/> -->
                           <tr t-if="count_loaded &lt; 500"> <!-- and record.state == 'sale' and not is_delivered"> -->

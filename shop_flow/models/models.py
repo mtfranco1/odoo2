@@ -24,6 +24,7 @@ class ShopFlow(models.Model):
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    # expected_date = 
     is_delivered = fields.Boolean(compute='_compute_delivered', store=True)
     # flow_record = fields.One2Many(comodel='shop_flow.shop_flow', inverse="order_id")
 
