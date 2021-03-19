@@ -1,0 +1,80 @@
+<odoo>
+  <data>
+
+    <record model="ir.ui.view" id="early_invoice.list">
+      <field name="name">early_invoice list</field>
+      <field name="model">sale.order</field>
+      <field name="inherit_id" ref="sale.view_order_form"/>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <xpath expr="(//header/button[@name='418'])[2]" position="attributes">
+          <attribute name="attrs">
+            {'invisible': [('invoice_status', '!=', 'no')]}
+          </attribute>
+        </xpath>
+        <xpath expr="//header/button[@name='action_cancel']" position="before">
+          <xpath expr="(//header/button[@name='418'])[2]" position="move"/>
+        </xpath>
+        </field>
+    </record>
+
+    <record id="view_sale_order_search_inherit" model="ir.ui.view">
+      <field name="name">sale.order.inherit</field>
+      <field name="model">sale.order</field>
+      <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+      <!-- <field name="type">list</field> -->
+      <field name="arch" type="xml">
+        <xpath expr="//search/filter" position="after">
+          <separator/>
+          <filter string="Downpayment Sales" name="downpayment_sales" domain="[('has_invoice','=',True),('invoice_status','!=','invoiced')]"/>
+          <filter string="To Confirm" name="to_confirm" domain="[('has_invoice','=',True),('state','in',['draft','sent'])]"/>
+          <filter string="Has Been Delivered" name="delivered" domain="[('is_delivered','=',True),('invoice_status','!=','invoiced'),('state','=','sale')]"/>
+          <separator/>
+        </xpath>
+      </field>
+    </record>
+
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="early_invoice.action_window">
+      <field name="name">early_invoice window</field>
+      <field name="res_model">early_invoice.early_invoice</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="early_invoice.action_server">
+      <field name="name">early_invoice server</field>
+      <field name="model_id" ref="model_early_invoice_early_invoice"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="early_invoice" id="early_invoice.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="early_invoice.menu_1" parent="early_invoice.menu_root"/>
+    <menuitem name="Menu 2" id="early_invoice.menu_2" parent="early_invoice.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="early_invoice.menu_1_list" parent="early_invoice.menu_1"
+              action="early_invoice.action_window"/>
+    <menuitem name="Server to list" id="early_invoice" parent="early_invoice.menu_2"
+              action="early_invoice.action_server"/>
+-->
+  </data>
+</odoo>
