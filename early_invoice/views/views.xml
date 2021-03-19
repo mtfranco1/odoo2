@@ -7,13 +7,13 @@
       <field name="inherit_id" ref="sale.view_order_form"/>
       <field name="type">form</field>
       <field name="arch" type="xml">
-        <xpath expr="(//header/button[@name='418'])[2]" position="attributes">
+        <xpath expr="(//header/button)[4]" position="attributes">
           <attribute name="attrs">
             {'invisible': [('invoice_status', '!=', 'no')]}
           </attribute>
         </xpath>
         <xpath expr="//header/button[@name='action_cancel']" position="before">
-          <xpath expr="(//header/button[@name='418'])[2]" position="move"/>
+          <xpath expr="(//header/button)[4]" position="move"/>
         </xpath>
         </field>
     </record>
