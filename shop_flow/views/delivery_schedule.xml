@@ -64,6 +64,27 @@
                   function next_box_id(el){
                     return eval($(el).closest(".ds_card").attr('id').substring(4)+" + 1");
                   }
+                  var get_index = 0;
+
+                  function get_more_rows(el){
+                    get_index += 1;
+                    $.ajax({
+                      url: "/shop_flow/get_more_data/",
+                      data: {group:get_index},
+                      success: function( result ) {
+                        data = result.split('&amp;');
+                        code = data[0];
+                        console.log("Code: " + code);
+                        console.log("Data " + data);
+                        console.log("Data Slice " + data.slice(1));
+                        rows = data.slice(1).join(' ');
+                        $("#getmore").before(rows);
+                        if (Boolean(code)){
+                          $("#getmore").hide();
+                        }
+                      }
+                    });
+                  }
           </script>
           <style>
                   .ds_card{
@@ -96,6 +117,12 @@
                     overflow: visible;
                     white-space: normal;
                   }
+                  #getmore_text{
+                    color: #008784;
+                  }
+                  #getmore_text:hover{
+                    color: #003a39;
+                  }
                 </style>
           <div class="container-fluid" id="page_container">
             <div class="row justify-content-around mt-4">
@@ -124,10 +151,14 @@
                       <tbody>
                         <t t-set="count_loaded" t-value="0" />
                         <!-- <t t-set="orders" t-value="records.get_all_sale_orders()"/> -->
-                        <t t-foreach="records" t-as="record">
+
+                        <t t-set="sort_key" t-value="lambda x: 'commitment_date' if x.commitment_date else 'expected_date' if x.expected_date else 'id'"/>
+                        <t t-set="dummy" t-value="records._compute_expected_date()"/>
+                        <t t-set="orders" t-value="records.sorted(key=sort_key)[:80]"/>
+                        <t t-foreach="orders" t-as="record">
                           <!-- Record is a Sales Order -->
-                          <t t-set="is_delivered" t-value="record._compute_delivered() or record.is_delivered"/>
-                          <tr t-if="count_loaded &lt; 500 and record.state == 'sale' and not is_delivered">
+                          <!-- <t t-set="is_delivered" t-value="record._compute_delivered() or record.is_delivered"/> -->
+                          <tr t-if="count_loaded &lt; 500"> <!-- and record.state == 'sale' and not is_delivered"> -->
                             <t t-set="count_loaded" t-value="count_loaded + 1" />
                             <td>
                               <span class="fa fa-caret-right" onclick="toggle_dropdown(this)" style="padding-left: 2px; padding-right: 5px;" />
@@ -217,6 +248,11 @@
 
                           </tr>
                         </t>
+                        <tr onclick="get_more_rows(this)" id="getmore">
+                          <td colspan="3">
+                            <p id="getmore_text">Get More Rows</p>
+                          </td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>

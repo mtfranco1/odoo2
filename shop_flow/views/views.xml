@@ -22,10 +22,32 @@
 
     <!-- actions opening views on models -->
 
-    <record model="ir.actions.act_window" id="shop_flow.action_window">
+    <record model="ir.actions.act_window" id="shop_flow_action_window">
       <field name="name">Shop Flow</field>
       <field name="res_model">sale.order</field>
       <field name="view_mode">qweb</field>
+      <field name="context">{"search_default_late_sales":1}</field>
+    </record>
+
+    <record id="view_shop_flow_search_inherit" model="ir.ui.view">
+      <field name="name">shop_flow.inherit</field>
+      <field name="model">sale.order</field>
+      <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+      <field name="type">qweb</field>
+      <field name="arch" type="xml">
+        <xpath expr="//search/filter" position="before">
+          <!-- <searchpanel view_types="qweb"></searchpanel> -->
+          <filter string="Late Sales" name="late_sales" domain="[('commitment_date','&lt;',((context_today()).strftime('%Y-%m-%d')))]"/>
+          <filter string="Active Sales" name="active_sales" domain="[('state', '=', 'sale'),('is_delivered','=',False)]" sort="commitment_date desc"/>
+        </xpath>
+      </field>
+    </record>
+    <!--  -->
+
+    <record id="shop_flow.shop_flow_action_window" model="ir.actions.act_window">
+      <!-- <field name="domain">['|',('store.user_ids.id','=',uid),('store','=',False)]</field> -->
+      <field name="context">{"search_default_late_sales":1}</field> <!-- Puts the filter on by default -->
+      <field name="context">{"search_default_active_sales":1}</field>
     </record>
 
     <!-- <record model="ir.ui.view" id="hello_world_view_1">
@@ -36,6 +58,7 @@
             </delivery_schedule>
         </field>
     </record>
+
 
      <menuitem id="main_hello_world_menu" name="Hello World App"/> -->
 
@@ -59,7 +82,7 @@
 
     <menuitem name="Shop Flow" 
     id="shop_flow.menu_root" 
-    action="shop_flow.action_window" 
+    action="shop_flow_action_window" 
     web_icon="shop_flow,static/description/icon.png"/>
 
     <!-- menu categories -->

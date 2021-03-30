@@ -26,6 +26,88 @@
       </dl>
     </template>
 
+    <template id="more_lines">
+      <t t-esc="is_done"/>&amp;
+      <t t-foreach="objects" t-as="record">
+        <tr>
+          <td>
+            <span class="fa fa-caret-right" onclick="toggle_dropdown(this)" style="padding-left: 2px; padding-right: 5px;" />
+            <span>
+              <a t-attf-href="#id={{record.id}}&amp;model=sale.order" target="_blank">
+                <t t-esc="record.name" />
+              </a>
+            </span>
+          </td>
+          <td>
+            <t t-if="record.partner_id.parent_id">
+              <t t-esc="record.partner_id.parent_id.name"></t>
+            </t>
+            <t t-else="">
+              <t t-esc="record.partner_id.name" />
+            </t>
+          </td>
+          <td>
+            <t t-if="record.commitment_date">
+              <t t-esc="record.commitment_date.strftime('%m/%d/%Y') if record.commitment_date else ''" />
+            </t>
+            <t t-else="">
+              <t t-esc="record._compute_expected_date() or record.expected_date.strftime('%m/%d/%Y') if record.expected_date else ''" />
+            </t>
+          </td>
+          <!-- Products -->
+          <tr class="dropdown-content" style="display: none;">
+            <td colspan="3" style="padding-left: 10px;">
+              <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped" style="table-layout: fixed;">
+                <caption>Products</caption>
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>On Hand</th>
+                    <th>Delivered</th>
+                    <th>Reserved</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <t t-foreach="record.order_line" t-as="so_line">
+                    <t t-if="so_line.product_id.type != 'service' and so_line.display_type is False">
+                      <tr onclick="get_data(this,'mo_data')" t-attf-model_id="{{so_line.id}}">
+                        <td>
+                          <span>
+                            <a t-attf-href="#id={{so_line.product_id.id}}&amp;model=product.product" target="_blank">
+                              <t t-if="so_line.product_id.default_code">
+                                [
+                                <t t-esc="so_line.product_id.default_code" />
+                                ]&#160;
+                              </t>
+                              <t t-esc="so_line.name" />
+                            </a>
+                          </span>
+                        </td>
+                        <td>
+                          <t t-esc="so_line.product_uom_qty" />
+                        </td>
+                        <td>
+                          <t t-esc="so_line.product_id._compute_quantities() or so_line.product_id.qty_available" />
+                        </td>
+                        <td>
+                          <t t-esc="so_line._compute_qty_delivered() or so_line.qty_delivered"/>
+                        </td>
+                        <td>
+                          <t t-set="reserved" t-value="so_line.get_reserved()" />
+                          <t t-esc="reserved" />
+                        </td>
+                      </tr>
+                    </t>
+                  </t>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tr>
+      </t>
+    </template>
+
     <template id="component_lines">
       <tr t-attf-class="dropdown-content{{' no-hide' if should_hide else ''}}">
         <td colspan="3" style="padding-left: 10px;">
@@ -129,7 +211,7 @@
                   <td>
                     <!-- <t t-esc="workorder.state" /> -->
                     <!-- <div t-field="workorder.state" t-options='{"widget": "selection_badge"}'/> -->
-                    <div t-field="workorder.state" />
+                    <span class="badge badge-pill"><div t-field="workorder.state" /></span>
                   </td>
                 </tr>
                 <t t-if="len(components) > 0">

@@ -42,12 +42,21 @@ class DeliveryScheduleManager(http.Controller):
             'objects': data,
             'po_data': po_data,
         })
-
-    # @http.route('/shop_flow/po_data/<model("purchase.order.line"):obj>/', auth='user')
-    # def mo_data_product(self, obj, **kw):
-    #     data = obj.env['mrp.production'].search([('product_id','=',obj.id)],limit=80)
-    #     po_data = obj.get_po_records()
-    #     return http.request.render('shop_flow.mo_lines', {
-    #         'objects': data,
-    #         'po_data': po_data,
-    #     })
+    @http.route('/shop_flow/get_more_data/', auth='user')
+    def get_so_data(self, **kw):
+        group_number = int(kw['group'])
+        group_size = 80
+        is_done = False
+        data  = http.request.env['sale.order'].search([])
+        min = 0 + group_size*group_number
+        max = min + group_size
+        if max >= len(data):
+            max = len(data)
+            is_done = True
+            
+        data = data[min:max]
+        
+        return http.request.render('shop_flow.more_lines', {
+            'objects': data,
+            'is_done': int(is_done),
+        })

@@ -19,21 +19,29 @@ class ShopFlow(models.Model):
 
     @api.model
     def get_all_sale_orders(self):
-        return self.env['sale.order'].search([],order="commitment_date desc, expected_date desc,id desc")
+        return self.env['sale.order'].search([('state', '=', 'sale'),('is_delivered','=',False)],order="commitment_date desc, expected_date desc,id desc")
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    is_delivered = fields.Boolean(compute='_compute_delivered')
+    # expected_date = 
+    is_delivered = fields.Boolean(compute='_compute_delivered', store=True)
     # flow_record = fields.One2Many(comodel='shop_flow.shop_flow', inverse="order_id")
 
     def _compute_delivered(self):
-        res = True
-        for delivery in self.env['stock.picking'].search([('sale_id','=',self.id)],order="id desc"):
-            for line in delivery.move_ids_without_package:
-                if delivery.state != 'done':
-                    res = False
-        self.is_delivered = res
+        for record in self:
+            res = True
+            for delivery in record.env['stock.picking'].search([('sale_id','=',record.id)]):
+                for line in delivery.move_ids_without_package:
+                    if delivery.state != 'done':
+                        res = False
+                        break
+            record.is_delivered = res
+
+    @api.model
+    def get_all_sale_orders(self):
+        return self.env['sale.order'].search([('state', '=', 'sale')],order="commitment_date desc, expected_date desc,id desc")
+
 
     # @api.model
     # def create(self, vals):
