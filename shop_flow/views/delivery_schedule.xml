@@ -64,7 +64,7 @@
                   function next_box_id(el){
                     return eval($(el).closest(".ds_card").attr('id').substring(4)+" + 1");
                   }
-                  get_index = 0;
+                  var get_index = 0;
                   function get_more_rows(el){
                     get_index += 1;
                     $.ajax({
@@ -245,7 +245,7 @@
                           </tr>
                         </t>
                         <tr onclick="get_more_rows(this)" id="getmore">
-                          <td>
+                          <td colspan="3">
                             <p id="getmore_text">Get More Rows</p>
                           </td>
                         </tr>
