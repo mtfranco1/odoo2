@@ -28,7 +28,7 @@
 
     <template id="more_lines">
       <t t-foreach="objects" t-as="record">
-        <t t-esc="is_done"/>\n
+        <t t-esc="is_done"/>&#10; <!-- Newline -->
         <tr>
           <td>
             <span class="fa fa-caret-right" onclick="toggle_dropdown(this)" style="padding-left: 2px; padding-right: 5px;" />
