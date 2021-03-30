@@ -47,10 +47,12 @@ class RMA(models.Model):
         'res.partner', 'Customer',
         index=True, states={'confirmed': [('readonly', True)]}, check_company=True, change_default=True,
         help='Choose partner for whom the order will be invoiced and delivered. You can find a partner by its Name, TIN, Email or Internal Reference.')
-    address_id = fields.Many2one(
-        'res.partner', 'Delivery Address',
-        domain="[('parent_id','=',partner_id)]", check_company=True,
-        states={'confirmed': [('readonly', True)]})
+    # address_id = fields.Many2one(
+    #     'res.partner', 'Delivery Address',
+    #     domain="[('parent_id','=',partner_id)]", check_company=True,
+    #     states={'confirmed': [('readonly', True)]})
+    address_id = fields.Many2one('res.partner', 'Delivery Address',
+        related='sale_id.partner_shipping_id')
     default_address_id = fields.Many2one('res.partner', compute='_compute_default_address_id')
     state = fields.Selection([
         ('draft', 'Quotation'),
