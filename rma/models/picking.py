@@ -20,6 +20,7 @@ class Return(models.TransientModel):
                         'partner_id':wizard.picking_id.sale_id.partner_id.id,
                         'product_qty':line.quantity,
                         'in_picking':new_picking_id,
+                        'internal_notes':wizard.picking_id.note,
                     })
         # Override the context to disable all the potential filters that could have been set previously
         ctx = dict(self.env.context)
