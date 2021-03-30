@@ -74,6 +74,7 @@
                       success: function( result ) {
                         data = result.split('\n');
                         code = data[0];
+                        console.log("Code: " + code);
                         rows = data.slice(1);
                         $("#getmore").before(rows);
                         if (Boolean(code)){

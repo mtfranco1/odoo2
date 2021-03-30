@@ -27,7 +27,7 @@
     </template>
 
     <template id="more_lines">
-      <t t-esc="is_done"/>&#10; <!-- Newline -->
+      <t t-esc="is_done"/>
       <t t-foreach="objects" t-as="record">
         <tr>
           <td>
@@ -55,7 +55,7 @@
             </t>
           </td>
           <!-- Products -->
-          <tr class="dropdown-content">
+          <tr class="dropdown-content" style="display: none;">
             <td colspan="3" style="padding-left: 10px;">
               <table class="o_list_table table table-sm table-hover table-striped o_list_table_ungrouped" style="table-layout: fixed;">
                 <caption>Products</caption>
@@ -106,11 +106,6 @@
           </tr>
         </tr>
       </t>
-      <!-- Collapse all dropdowns -->
-      <script>
-        // class target is .dropdown-content
-        $(".dropdown-content").hide();
-      </script>
     </template>
 
     <template id="component_lines">
