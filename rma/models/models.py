@@ -265,6 +265,8 @@ class RMA(models.Model):
         if vals['name'].startswith('/'):
             vals['name'] = (self.env['ir.sequence'].next_by_code('rma.rma') or '/') + vals['name']
             vals['name'] = vals['name'][:-1] if vals['name'].endswith('/') and vals['name'] != '/' else vals['name']
+        sale = self.env['sale.order'].browse(vals.get('sale_id'))
+        vals['partner_invoice_id'] = sale.partner_invoice_id.id
         return super(RMA, self).create(vals)
 
     def action_validate(self):
