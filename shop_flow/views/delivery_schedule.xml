@@ -124,9 +124,9 @@
                       <tbody>
                         <t t-set="count_loaded" t-value="0" />
                         <!-- <t t-set="orders" t-value="records.get_all_sale_orders()"/> -->
-                        <t t-set="sort_key" t-value="lambda x: 'commitment_date' if x.commitment_date else 'expected_date' if x.expected_date else 'date_order'"/>
+                        <t t-set="sort_key" t-value="lambda x: 'commitment_date' if x.commitment_date else 'expected_date' if x.expected_date else 'id'"/>
                         <t t-set="dummy" t-value="records._compute_expected_date()"/>
-                        <t t-set="orders" t-value="records.sorted(key=sort_key)"/>
+                        <t t-set="orders" t-value="records.sorted(key=sort_key)[:80]"/>
                         <t t-foreach="orders" t-as="record">
                           <!-- Record is a Sales Order -->
                           <!-- <t t-set="is_delivered" t-value="record._compute_delivered() or record.is_delivered"/> -->
@@ -152,9 +152,9 @@
                               <t t-if="record.commitment_date">
                                 <t t-esc="record.commitment_date.strftime('%m/%d/%Y') if record.commitment_date else ''" />
                               </t>
-                              <!-- <t t-else="">
+                              <t t-else="">
                                 <t t-esc="record._compute_expected_date() or record.expected_date.strftime('%m/%d/%Y') if record.expected_date else ''" />
-                              </t> -->
+                              </t>
                             </td>
                             <!-- Products -->
                             <tr class="dropdown-content">

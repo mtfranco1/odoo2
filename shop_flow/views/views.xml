@@ -38,13 +38,16 @@
         <xpath expr="//search/filter" position="before">
           <!-- <searchpanel view_types="qweb"></searchpanel> -->
           <filter string="Late Sales" name="late_sales" domain="[('commitment_date','&lt;',((context_today()).strftime('%Y-%m-%d')))]"/>
+          <filter string="Active Sales" name="active_sales" domain="[('state', '=', 'sale'),('is_delivered','=',False)]" sort="commitment_date desc"/>
         </xpath>
       </field>
     </record>
+    <!--  -->
 
     <record id="shop_flow.shop_flow_action_window" model="ir.actions.act_window">
       <!-- <field name="domain">['|',('store.user_ids.id','=',uid),('store','=',False)]</field> -->
       <field name="context">{"search_default_late_sales":1}</field> <!-- Puts the filter on by default -->
+      <field name="context">{"search_default_active_sales":1}</field>
     </record>
 
     <!-- <record model="ir.ui.view" id="hello_world_view_1">
