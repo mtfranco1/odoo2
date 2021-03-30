@@ -65,11 +65,12 @@
                     return eval($(el).closest(".ds_card").attr('id').substring(4)+" + 1");
                   }
                   var get_index = 0;
+
                   function get_more_rows(el){
                     get_index += 1;
                     $.ajax({
                       url: "/shop_flow/get_more_data/",
-                      data: {group=get_index},
+                      data: {group:get_index},
                       success: function( result ) {
                         data = result.split('\n');
                         code = data[0];
