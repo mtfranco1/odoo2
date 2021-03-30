@@ -76,6 +76,7 @@
                         code = data[0];
                         console.log("Code: " + code);
                         console.log("Data " + data);
+                        console.log("Data Slice " + data.slice(1));
                         rows = data.slice(1);
                         $("#getmore").before(rows);
                         if (Boolean(code)){
