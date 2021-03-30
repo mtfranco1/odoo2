@@ -53,6 +53,8 @@ class DeliveryScheduleManager(http.Controller):
         if max >= len(data):
             max = len(data)
             is_done = True
+            
+        data = data[min:max]
         
         return http.request.render('shop_flow.more_lines', {
             'objects': data,
