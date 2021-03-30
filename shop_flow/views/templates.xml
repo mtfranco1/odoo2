@@ -27,7 +27,7 @@
     </template>
 
     <template id="more_lines">
-      <t t-esc="is_done"/>
+      <t t-esc="is_done"/>&amp;
       <t t-foreach="objects" t-as="record">
         <tr>
           <td>
