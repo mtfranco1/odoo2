@@ -42,3 +42,19 @@ class DeliveryScheduleManager(http.Controller):
             'objects': data,
             'po_data': po_data,
         })
+    @http.route('/shop_flow/get_more_data/', auth='user')
+    def get_so_data(self, **kw):
+        group_number = kw['group']
+        group_size = 80
+        is_done = False
+        data  = http.request.env['sale.order'].search([])
+        min = 0 + group_size*group_number
+        max = min + group_size
+        if max >= len(data):
+            max = len(data)
+            is_done = True
+        
+        return http.request.render('shop_flow.more_lines', {
+            'objects': data,
+            'is_done': int(is_done),
+        })
