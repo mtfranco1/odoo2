@@ -44,7 +44,7 @@ class DeliveryScheduleManager(http.Controller):
         })
     @http.route('/shop_flow/get_more_data/', auth='user')
     def get_so_data(self, **kw):
-        group_number = kw['group']
+        group_number = int(kw['group'])
         group_size = 80
         is_done = False
         data  = http.request.env['sale.order'].search([])
