@@ -126,7 +126,7 @@
                         <!-- <t t-set="orders" t-value="records.get_all_sale_orders()"/> -->
                         <t t-set="sort_key" t-value="lambda x: 'commitment_date' if x.commitment_date else 'expected_date' if x.expected_date else 'id'"/>
                         <t t-set="dummy" t-value="records._compute_expected_date()"/>
-                        <t t-set="orders" t-value="records.sorted(key=sort_key)[:80]"/>
+                        <t t-set="orders" t-value="records.sorted(key=sort_key)[:5]"/>
                         <t t-foreach="orders" t-as="record">
                           <!-- Record is a Sales Order -->
                           <!-- <t t-set="is_delivered" t-value="record._compute_delivered() or record.is_delivered"/> -->
