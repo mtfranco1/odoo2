@@ -77,7 +77,7 @@
                         console.log("Code: " + code);
                         console.log("Data " + data);
                         console.log("Data Slice " + data.slice(1));
-                        rows = data.slice(1);
+                        rows = data.slice(1).join(' ');
                         $("#getmore").before(rows);
                         if (Boolean(code)){
                           $("#getmore").hide();
