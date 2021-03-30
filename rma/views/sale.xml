@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        <record id="view_account_move_rma" model="ir.ui.view">
+            <field name="name">rma.sale.order</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" type="object" name="get_repairs"
+                        icon="fa-wrench" attrs="{'invisible': [('repair_count', '=', 0)]}">
+                        <field string="Repairs" name="repair_count" widget="statinfo"/>
+                    </button>
+                </div>
+            </field>
+          </record>
+    </data>
+</odoo>
