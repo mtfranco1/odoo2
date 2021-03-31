@@ -1,6 +1,6 @@
 <odoo>
     <data>
-        <record id="view_account_move_rma" model="ir.ui.view">
+        <record id="view_sale_order_rma" model="ir.ui.view">
             <field name="name">rma.sale.order</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
