@@ -38,19 +38,13 @@ class SaleOrder(models.Model):
                         break
             record.is_delivered = res
 
+    # def debug(self):
+    #     _logger.info("Context: " + str(self.env.context))
+
     @api.model
     def get_all_sale_orders(self):
         return self.env['sale.order'].search([('state', '=', 'sale')],order="commitment_date desc, expected_date desc,id desc")
 
-
-    # @api.model
-    # def create(self, vals):
-    #     res = super(SaleOrder, self).create(vals)
-    #     self.env['shop_flow.shop_flow'].create({
-    #         'order_id': res.id
-    #     })
-    #     _logger.info("\RESVAL: " + str(res) + "\n" + str(res.id))
-    #     return res
 
 class SaleLine(models.Model):
     _inherit = 'sale.order.line'
