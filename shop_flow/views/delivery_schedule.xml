@@ -66,10 +66,15 @@
                     return eval($(el).closest(".ds_card").attr('id').substring(4)+" + 1");
                   }
                   var get_index = 0;
+                  var loading = false;
 
                   function get_more_rows(el){
+                    if (loading){
+                      return;
+                    }
                     get_index += 1;
                     $("#spinner").show();
+                    loading = true;
                     $.ajax({
                       url: "/shop_flow/get_more_data/",
                       data: {group:get_index,group_size:<t t-esc="batch_size"/>},
@@ -85,6 +90,7 @@
                         if (Boolean(code)){
                           $("#getmore").hide();
                         }
+                        loading = false;
                         $("#spinner").hide();
                       }
                     });
@@ -153,10 +159,11 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <t t-set="sort_key" t-value="lambda x: 'commitment_date' if x.commitment_date else 'expected_date' if x.expected_date else 'id'"/>
-                        <t t-set="dummy" t-value="records._compute_expected_date()"/>
-            
-                        <t t-set="orders" t-value="records.sorted(key=sort_key)[:batch_size]"/>
+                        <!-- <t t-set="sort_key" t-value="lambda x: 'commitment_date' if x.commitment_date else 'expected_date' if x.expected_date else 'id'"/> -->
+                        <!-- <t t-set="dummy" t-value="records._compute_expected_date()"/> -->
+                        <t t-set="sort_key" t-value="lambda x: x.commitment_date"/>
+
+                        <t t-set="orders" t-value="records.filtered(lambda x: x.commitment_date).sorted(key=sort_key)[:batch_size]"/>
                         <t t-foreach="orders" t-as="record">
                           <!-- Record is a Sales Order -->
                           
