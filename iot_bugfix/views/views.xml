@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="iot_bugfix.list">
+      <field name="name">iot_bugfix list</field>
+      <field name="model">iot_bugfix.iot_bugfix</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="iot_bugfix.action_window">
+      <field name="name">iot_bugfix window</field>
+      <field name="res_model">iot_bugfix.iot_bugfix</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="iot_bugfix.action_server">
+      <field name="name">iot_bugfix server</field>
+      <field name="model_id" ref="model_iot_bugfix_iot_bugfix"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="iot_bugfix" id="iot_bugfix.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="iot_bugfix.menu_1" parent="iot_bugfix.menu_root"/>
+    <menuitem name="Menu 2" id="iot_bugfix.menu_2" parent="iot_bugfix.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="iot_bugfix.menu_1_list" parent="iot_bugfix.menu_1"
+              action="iot_bugfix.action_window"/>
+    <menuitem name="Server to list" id="iot_bugfix" parent="iot_bugfix.menu_2"
+              action="iot_bugfix.action_server"/>
+-->
+  </data>
+</odoo>
