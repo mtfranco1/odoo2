@@ -8,7 +8,7 @@ class iot_bugfix(models.Model):
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
-        message = super(iot_bugfix, self).message_post(**kwargs)
+        message = super(models.Model, self).message_post(**kwargs)
         if message.attachment_ids and 'Label' in message.attachment_ids.mapped('name') and self.picking_type_id.iot_printer_id:
             self.env['bus.bus'].sendone(
                 (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
