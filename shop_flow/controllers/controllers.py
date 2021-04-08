@@ -58,7 +58,7 @@ class DeliveryScheduleManager(http.Controller):
             max = len(data)
             is_done = True
             
-        data = data[min:max]
+        data = data[min:max].sorted(key=lambda x: x.commitment_date)
         
         return http.request.render('shop_flow.more_lines', {
             'objects': data,
