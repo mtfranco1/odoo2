@@ -47,7 +47,7 @@ class DeliveryScheduleManager(http.Controller):
         })
     @http.route('/shop_flow/get_more_data/', auth='user')
     def get_so_data(self, **kw):
-        # _logger.info("\nContext: " + str(http.request.env.context))
+        _logger.info("\nContext: " + str(http.request.env.context))
         group_number = int(kw['group'])
         group_size = int(kw['group_size'])
         is_done = False
