@@ -187,8 +187,8 @@
                             </td>
                             <td>
                               <t t-if="record.commitment_date">
-                                <!-- <t t-esc="record.commitment_date.strftime('%m/%d/%Y') if record.commitment_date else ''" /> -->
-                                <span t-field="record.commitment_date" t-options='{"widget": "date"}'/>
+                                <t t-esc="(record.commitment_date - datetime.timedelta(days=1)).strftime('%m/%d/%Y') if record.commitment_date else ''" />
+                                <!-- <span t-field="record.commitment_date" t-options='{"widget": "date"}'/> -->
                               </t>
                               <t t-else="">
                                 <t t-esc="record._compute_expected_date() or record.expected_date.strftime('%m/%d/%Y') if record.expected_date else ''" />
