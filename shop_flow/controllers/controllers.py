@@ -51,7 +51,7 @@ class DeliveryScheduleManager(http.Controller):
         group_number = int(kw['group'])
         group_size = int(kw['group_size'])
         is_done = False
-        data  = http.request.env['sale.order'].search([])
+        data  = http.request.env['sale.order'].search([('commitment_date','!=',False)])
         min = 0 + group_size*group_number
         max = min + group_size
         if max >= len(data):
