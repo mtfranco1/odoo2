@@ -6,6 +6,7 @@
       <field name="arch" type="xml">
         <qweb>
           <!-- <script src="../js/delivery_qweb.js"/>  -->
+          <t t-set="batch_size" t-value="80"/> <!-- Remember to change this on the controller if edited -->
           <script>
             function toggle_dropdown(el){
                     var target = el.parentElement.parentElement.nextElementSibling;
@@ -65,23 +66,32 @@
                     return eval($(el).closest(".ds_card").attr('id').substring(4)+" + 1");
                   }
                   var get_index = 0;
+                  var loading = false;
 
                   function get_more_rows(el){
+                    if (loading){
+                      return;
+                    }
                     get_index += 1;
+                    $("#spinner").show();
+                    loading = true;
                     $.ajax({
                       url: "/shop_flow/get_more_data/",
-                      data: {group:get_index},
+                      data: {group:get_index,group_size:<t t-esc="batch_size"/>},
                       success: function( result ) {
-                        data = result.split('&amp;');
-                        code = data[0];
+                        index = result.search(/\S|$/) + 1;
+                        code = parseInt(result.substr(0,index));
+                        data = result.substr(index);
                         console.log("Code: " + code);
                         console.log("Data " + data);
-                        console.log("Data Slice " + data.slice(1));
-                        rows = data.slice(1).join(' ');
-                        $("#getmore").before(rows);
+                        //console.log("Data Slice " + data.slice(1));
+                        //rows = data.slice(1).join(' ');
+                        $("#getmore").before(data);
                         if (Boolean(code)){
                           $("#getmore").hide();
                         }
+                        loading = false;
+                        $("#spinner").hide();
                       }
                     });
                   }
@@ -149,17 +159,16 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <t t-set="count_loaded" t-value="0" />
-                        <!-- <t t-set="orders" t-value="records.get_all_sale_orders()"/> -->
+                        <!-- <t t-set="sort_key" t-value="lambda x: 'commitment_date' if x.commitment_date else 'expected_date' if x.expected_date else 'id'"/> -->
+                        <!-- <t t-set="dummy" t-value="records._compute_expected_date()"/> -->
+                        <t t-set="sort_key" t-value="lambda x: x.commitment_date"/>
 
-                        <t t-set="sort_key" t-value="lambda x: 'commitment_date' if x.commitment_date else 'expected_date' if x.expected_date else 'id'"/>
-                        <t t-set="dummy" t-value="records._compute_expected_date()"/>
-                        <t t-set="orders" t-value="records.sorted(key=sort_key)[:80]"/>
+                        <t t-set="orders" t-value="records.filtered(lambda x: x.commitment_date).sorted(key=sort_key)[:batch_size]"/>
                         <t t-foreach="orders" t-as="record">
                           <!-- Record is a Sales Order -->
+                          
                           <!-- <t t-set="is_delivered" t-value="record._compute_delivered() or record.is_delivered"/> -->
-                          <tr t-if="count_loaded &lt; 500"> <!-- and record.state == 'sale' and not is_delivered"> -->
-                            <t t-set="count_loaded" t-value="count_loaded + 1" />
+                          <tr>
                             <td>
                               <span class="fa fa-caret-right" onclick="toggle_dropdown(this)" style="padding-left: 2px; padding-right: 5px;" />
                               <span>
@@ -248,9 +257,11 @@
 
                           </tr>
                         </t>
+                        <!-- <tr t-if="len(orders) > batch_size" onclick="get_more_rows(this)" id="getmore"> -->
                         <tr onclick="get_more_rows(this)" id="getmore">
                           <td colspan="3">
-                            <p id="getmore_text">Get More Rows</p>
+                            <span id="getmore_text">Get More Rows</span>
+                            <i class="fa fa-spinner fa-spin" id="spinner"></i>
                           </td>
                         </tr>
                       </tbody>
@@ -274,6 +285,7 @@
           <script>
             // class target is .dropdown-content
             $(".dropdown-content").hide();
+            $("#spinner").hide();
           </script>
           <!-- <script>
             function open_forecast(el, id){
