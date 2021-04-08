@@ -51,14 +51,14 @@ class DeliveryScheduleManager(http.Controller):
         group_number = int(kw['group'])
         group_size = int(kw['group_size'])
         is_done = False
-        data  = http.request.env['sale.order'].search([('commitment_date','!=',False)])
+        data  = http.request.env['sale.order'].search([('commitment_date','!=',False)]).sorted(key=lambda x: x.commitment_date)
         min = 0 + group_size*group_number
         max = min + group_size
         if max >= len(data):
             max = len(data)
             is_done = True
             
-        data = data[min:max].sorted(key=lambda x: x.commitment_date)
+        data = data[min:max]
         
         return http.request.render('shop_flow.more_lines', {
             'objects': data,
