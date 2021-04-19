@@ -1,5 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_rma_rma,rma.rma,model_rma_rma,stock.group_stock_user,1,1,1,1
-access_rma_tags,rma.tags,model_rma_tags,stock.group_stock_user,1,1,1,1
-access_rma_line,rma.line,model_rma_line,stock.group_stock_user,1,1,1,1
-access_stock_warn_insufficient_qty_repair,access.stock.warn.insufficient.qty.rma,model_stock_warn_insufficient_qty_rma,stock.group_stock_user,1,1,1,1
