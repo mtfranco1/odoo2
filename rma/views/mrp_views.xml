@@ -1,0 +1,19 @@
+<odoo>
+    <data>
+        <record id="view_mrp_rma" model="ir.ui.view">
+            <field name="name">rma.mrp</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+              <field name="user_id" position="after">
+                <field name="rma_id" string="RMA" attrs="{'invisible':[('rma_id', '=', False)]}"/>
+              </field>
+              <xpath expr="//notebook/page[last()]" position="after">
+                <page string="Notes" name="notes">
+                  <field name="internal_notes" placeholder="Add internal notes."/>
+                </page>
+              </xpath>
+            </field>
+          </record>
+    </data>
+</odoo>
