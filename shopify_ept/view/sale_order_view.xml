@@ -42,24 +42,26 @@
     </record>
 
     <!--Search view of sale order-->
-    <record id="shopify_view_sales_order_filter" model="ir.ui.view">
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
-        <field name="arch" type="xml">
-            <filter position="after">
-                <filter string="Shipped Order"
-                        domain="[('shopify_order_status', '=', 'fulfilled')]"
-                        help="While import order from shopify at time shipped order"
-                        name="shopify_order_status"/>
-                <filter string="Order status updated in Shopify"
-                        name="order_status_updated"
-                        domain="[('updated_in_shopify', '=', True)]"/>
-                <filter string="Order status not updated in Shopify"
-                        name="order_status_not_updated"
-                        domain="[('updated_in_shopify', '=', False)]"/>
-            </filter>
-        </field>
-    </record>
+<!-- MEO 20210526 - Disable section of code preventing shopify_connector installation-->	
+<!--    <record id="shopify_view_sales_order_filter" model="ir.ui.view">-->
+<!--        <field name="model">sale.order</field>-->
+<!--        <field name="inherit_id" ref="sale.view_sales_order_filter"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <filter position="after">-->
+<!--                <filter string="Shipped Order"-->
+<!--                        domain="[('shopify_order_status', '=', 'fulfilled')]"-->
+<!--                        help="While import order from shopify at time shipped order"-->
+<!--                        name="shopify_order_status"/>-->
+<!--                <filter string="Order status updated in Shopify"-->
+<!--                        name="order_status_updated"-->
+<!--                        domain="[('updated_in_shopify', '=', True)]"/>-->
+<!--                <filter string="Order status not updated in Shopify"-->
+<!--                        name="order_status_not_updated"-->
+<!--                        domain="[('updated_in_shopify', '=', False)]"/>-->
+<!--            </filter>-->
+<!--        </field>-->
+<!--    </record>-->
+<!-- MEO 20210526 - END-->  	
 
     <!--Inherit Form view of shopify shopify sale order -->
     <record id="view_order_form" model="ir.ui.view">
